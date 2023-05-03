@@ -1,7 +1,7 @@
 const { init } = require("../server");
 
 function numSplitter(input){
-  let num = input.match(/[.\d\/]+/g) || ["1"];  
+  let num = input.match(/[.\d\/]+/g) || "1";  
   // console.log(num);
   let unit = input.match(/[a-zA-Z]+/g)[0];
   return [num[0], unit];
@@ -19,6 +19,7 @@ function ConvertHandler() {
   let inUnit = ['kilometers','miles','gallons','liters','pounds','kilograms'];
   let outUnit = ['miles','kilometers','liters','gallons','kilograms','pounds'];
   let index = 0;
+
   this.getNum = function(input) {  
     let res = numSplitter(input)[0];  
     let nums = checkDiv(res);        
@@ -29,7 +30,7 @@ function ConvertHandler() {
     let n2 = nums[1] || "1";
 
     res = parseFloat(n1) / parseFloat(n2);
-
+// console.log(typeof(res));
     if(isNaN(n1) || isNaN(n2)){return undefined;}
     return res; 
   };
@@ -53,7 +54,7 @@ function ConvertHandler() {
   this.spellOutUnit = function(unit) {
     index = real.indexOf(unit);
     // console.log([inUnit[index], outUnit[index]]);
-    return [inUnit[index], outUnit[index]];
+    return inUnit[index];
   };
   
   this.convert = function(initNum, initUnit) {
@@ -83,14 +84,14 @@ function ConvertHandler() {
       default:
             }
     
-    console.log(result);
-    return result;
+    return parseFloat(result.toFixed(5));
   };
   
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
-    let result = `${initNum} ${inUnit[index]} converts to ${returnNum} ${outUnit[index]}`;
+    let initUnitString = this.spellOutUnit(initUnit);
+    let returnUnitString = this.spellOutUnit(returnUnit);
+    return `${initNum} ${initUnitString} converts to ${returnNum} ${returnUnitString}`;    
     
-    return result;
   };
   
 }
